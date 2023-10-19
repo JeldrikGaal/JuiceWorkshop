@@ -49,3 +49,6 @@ MonoBehaviour:
   - {fileID: 183186803765492385, guid: 3f4a62fc5177bbf49ad2c5ab09aeab9f, type: 3}
   - {fileID: 183186803765492385, guid: e6180a4ebcbe9fb459bff7df2ddb3e61, type: 3}
   _tileAmount: 3
+  _obstacleProbability: 0.8
+  _obstaclePrefabs:
+  - {fileID: 8439094265290375933, guid: fbedac2b293603744a81cbe83af793ed, type: 3}

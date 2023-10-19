@@ -17,7 +17,6 @@ public class S_GroundManager : MonoBehaviour
     private List<GameObject> _spawnedSegments = new List<GameObject>();
     
     #region Unity Events
-
     private void Awake()
     {
         if (Instance == null)
@@ -47,7 +46,7 @@ public class S_GroundManager : MonoBehaviour
             SpawnTile();
         }
 
-        if (_spawnedSegments[2].transform.position.x <= S_PlayerController.Instance.transform.position.x)
+        if (_spawnedSegments[2].transform.position.y <= S_PlayerController.Instance.transform.position.y)
         {
             SpawnTile();
         }
@@ -59,19 +58,19 @@ public class S_GroundManager : MonoBehaviour
         if (_spawnedSegments.Count > 0)
         {
             _spawnedSegments.Add(Instantiate(_groundSegments[Random.Range(0,_groundSegments.Count)]));
-            _spawnedSegments[^1].transform.position = new Vector3(_spawnedSegments[^2].transform.position.x + 7,
-                _spawnedSegments[^2].transform.position.y, _spawnedSegments[^2].transform.position.z);
+            _spawnedSegments[^1].transform.position = new Vector3(_spawnedSegments[^2].transform.position.x,
+                _spawnedSegments[^2].transform.position.y + SegmentSize.x, _spawnedSegments[^2].transform.position.z);
         }
         else
         {
             _spawnedSegments.Add(Instantiate(_groundSegments[0]));
+            _spawnedSegments[^1].GetComponent<S_GroundSegmentLogic>().SetObstacleProbability(0);
         }
 
         if (_spawnedSegments.Count > 5)
         {
             RemoveTile();
         }
-        
     }
     
     private void RemoveTile()

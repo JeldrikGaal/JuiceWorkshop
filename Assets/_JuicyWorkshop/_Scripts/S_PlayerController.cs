@@ -3,19 +3,29 @@ using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class S_PlayerController : MonoBehaviour
 {
     [SerializeField] private GameObject _visuals;
+    [SerializeField] private GameObject _leftEye;
+    [SerializeField] private GameObject _leftEyeBall;
+    [SerializeField] private GameObject _rightEye;
+    [SerializeField] private GameObject _rightEyeBall;
+    [SerializeField] private GameObject _mouth;
     [SerializeField] private GameObject _bulletPrefab;
     [SerializeField] private Vector2 _movespeed;
     [SerializeField] private float _shootDelay;
     
-    [Tooltip("0: stretching on movement")]
+    [Tooltip("0: stretching on movement, 1: blink anim")]
     [SerializeField] public List<bool> _juiceToggle;
 
     private float _lastShotTime;
     public static S_PlayerController Instance;
+
+    private float _blinkAnimStart;
+    private Vector2 _blinkAnimRandomRange = new Vector2(3,7);
+    private float _currentWaitTimeBlinkAnim;
     
     #region Unity Events
 
@@ -35,6 +45,7 @@ public class S_PlayerController : MonoBehaviour
     void Start()
     {
         _lastShotTime = Time.time;
+        _blinkAnimStart = Time.time;
     }
     void Update()
     {
@@ -53,19 +64,51 @@ public class S_PlayerController : MonoBehaviour
         {
             Move(new Vector3(_movespeed.x * Time.deltaTime, 0, 0));
         }
+
+        if (Input.touchCount > 0)
+        {
+            if(Camera.main.ScreenToWorldPoint(Input.touches[0].position).x > transform.position.x)
+            {
+                Move(new Vector3(_movespeed.x * Time.deltaTime, 0, 0));
+            }
+            else
+            {
+                Move(new Vector3(-_movespeed.x * Time.deltaTime, 0, 0));
+            }
+        }
         
         // Make player shoot automatically
         if (Time.time - _lastShotTime > _shootDelay)
         {
             Shoot();
         }
+        
+        // Make Eyes blink
+        if (_juiceToggle[1])
+        {
+            if (Time.time - _blinkAnimStart > _currentWaitTimeBlinkAnim)
+            {
+                StartCoroutine(BlinkAnim());
+            }
+        }
     }
-
+    
+    private void OnEnable()
+    {
+        S_JuiceManager.ToggleAllJuice += ToggleAllJuice;
+    }
+    
+    private void OnDisable()
+    {
+        S_JuiceManager.ToggleAllJuice -= ToggleAllJuice;
+    }
+    #endregion
+    
     private void Move(Vector3 dif)
     {
         Vector3 newPos = new Vector3(transform.position.x + dif.x, transform.position.y + dif.y, transform.position.z + dif.z);
-        if (newPos.x < S_GroundManager.Instance.SegmentSize.y * 1.5 &&
-            newPos.x > -S_GroundManager.Instance.SegmentSize.y * 1.5)
+        if (newPos.x < S_GroundManager.Instance.SegmentSize.y * 1.25f &&
+            newPos.x > -S_GroundManager.Instance.SegmentSize.y * 1.25f)
         {
             transform.position = newPos;
 
@@ -83,5 +126,29 @@ public class S_PlayerController : MonoBehaviour
         bullet.transform.position = transform.position;
         _lastShotTime = Time.time;
     }
-    #endregion
+    
+    private void ToggleAllJuice(bool on)
+    {
+        _juiceToggle = S_JuiceManager.GetBoolList(on, _juiceToggle.Count);
+        _leftEye.SetActive(on);
+        _rightEye.SetActive(on);
+        _mouth.SetActive(on);
+    }
+    private void ToggleJuice(List<bool> toggles)
+    {
+        _juiceToggle = toggles;
+    }
+
+    private IEnumerator BlinkAnim()
+    {
+        _currentWaitTimeBlinkAnim = Random.Range(_blinkAnimRandomRange.x, _blinkAnimRandomRange.y);
+        _blinkAnimStart = Time.time;
+        
+        _leftEye.SetActive(false);
+        _rightEye.SetActive(false);
+        yield return new WaitForSeconds(0.05f);
+        _leftEye.SetActive(true);
+        _rightEye.SetActive(true);
+        
+    }
 }

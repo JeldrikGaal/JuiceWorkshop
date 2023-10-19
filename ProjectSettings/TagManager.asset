@@ -46,12 +46,15 @@ TagManager:
   - name: Background
     uniqueID: 3863111431
     locked: 0
+  - name: Projectiles
+    uniqueID: 4112600655
+    locked: 0
   - name: Player
     uniqueID: 408718115
     locked: 0
   - name: Obstacles
     uniqueID: 3106652579
     locked: 0
-  - name: Projectiles
-    uniqueID: 4112600655
+  - name: UI
+    uniqueID: 3681729221
     locked: 0

@@ -7,14 +7,14 @@ using Random = UnityEngine.Random;
 
 public class S_GroundManager : MonoBehaviour
 {
-    [SerializeField] private List<GameObject> _groundSegments;
+    [SerializeField] public List<GameObject> _groundSegments;
     [SerializeField] private GameObject _baseGroundTile;
     [SerializeField] private int _segmentStartAmount;
     
     public static S_GroundManager Instance;
     public Vector2 SegmentSize = new Vector2(7, 1.5f);
-    
-    private List<GameObject> _spawnedSegments = new List<GameObject>();
+
+    public List<GameObject> SpawnedSegments {get; private set;} = new List<GameObject>(); 
     
     #region Unity Events
     private void Awake()
@@ -46,7 +46,7 @@ public class S_GroundManager : MonoBehaviour
             SpawnTile();
         }
 
-        if (_spawnedSegments[2].transform.position.y <= S_PlayerController.Instance.transform.position.y)
+        if (SpawnedSegments[2].transform.position.y <= S_PlayerController.Instance.transform.position.y)
         {
             SpawnTile();
         }
@@ -55,19 +55,19 @@ public class S_GroundManager : MonoBehaviour
     
     private void SpawnTile()
     {
-        if (_spawnedSegments.Count > 0)
+        if (SpawnedSegments.Count > 0)
         {
-            _spawnedSegments.Add(Instantiate(_groundSegments[Random.Range(0,_groundSegments.Count)]));
-            _spawnedSegments[^1].transform.position = new Vector3(_spawnedSegments[^2].transform.position.x,
-                _spawnedSegments[^2].transform.position.y + SegmentSize.x, _spawnedSegments[^2].transform.position.z);
+            SpawnedSegments.Add(Instantiate(_groundSegments[Random.Range(0,_groundSegments.Count)]));
+            SpawnedSegments[^1].transform.position = new Vector3(SpawnedSegments[^2].transform.position.x,
+                SpawnedSegments[^2].transform.position.y + SegmentSize.x, SpawnedSegments[^2].transform.position.z);
         }
         else
         {
-            _spawnedSegments.Add(Instantiate(_groundSegments[0]));
-            _spawnedSegments[^1].GetComponent<S_GroundSegmentLogic>().SetObstacleProbability(0);
+            SpawnedSegments.Add(Instantiate(_groundSegments[0]));
+            SpawnedSegments[^1].GetComponent<S_GroundSegmentLogic>().SetObstacleProbability(0);
         }
 
-        if (_spawnedSegments.Count > 5)
+        if (SpawnedSegments.Count > 5)
         {
             RemoveTile();
         }
@@ -75,7 +75,7 @@ public class S_GroundManager : MonoBehaviour
     
     private void RemoveTile()
     {
-        Destroy(_spawnedSegments[0]);
-        _spawnedSegments.RemoveAt(0);
+        Destroy(SpawnedSegments[0]);
+        SpawnedSegments.RemoveAt(0);
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -12,6 +13,7 @@ public class S_GameManager : MonoBehaviour
     private float _score;
 
     [SerializeField] private TMP_Text _scoreText;
+    [SerializeField] public List<bool> _juiceToggle;
     
     #region Unity Events
 
@@ -32,12 +34,14 @@ public class S_GameManager : MonoBehaviour
     {
         S_ObstacleLogic.PlayerHitObstacle += PlayerCollision;
         S_ObstacleLogic.ObstacleDestroyedByPlayer += GetScoreFromObstacle;
+        S_JuiceManager.ToggleAllJuice += ToggleAllJuice;
     }
 
     private void OnDisable()
     {
         S_ObstacleLogic.PlayerHitObstacle -= PlayerCollision;
         S_ObstacleLogic.ObstacleDestroyedByPlayer -= GetScoreFromObstacle;
+        S_JuiceManager.ToggleAllJuice -= ToggleAllJuice;
     }
 
     void Start()
@@ -46,7 +50,7 @@ public class S_GameManager : MonoBehaviour
     }
     void Update()
     {
-        //AddScore(Time.deltaTime);
+        
     }
     #endregion
     
@@ -78,8 +82,21 @@ public class S_GameManager : MonoBehaviour
     private void UpdateScoreText()
     {
         _scoreText.text = Mathf.Round(_score).ToString();
+        if (_juiceToggle[0])
+        {
+            ScoreTextAnim();
+        }
     }
 
+    private void ScoreTextAnim()
+    {
+        _scoreText.color = Color.green;
+        _scoreText.transform.DOPunchScale(new Vector3(1, 1.5f, 1), 0.2f, 0, 0).OnComplete(() =>
+        {
+            _scoreText.color = Color.white;
+        });
+    }
+    
     private void GetScoreFromObstacle(GameObject obstacle)
     {
         AddScore(obstacle.GetComponent<S_ObstacleLogic>().GetScore());
@@ -92,4 +109,13 @@ public class S_GameManager : MonoBehaviour
         Loose();
     }
     #endregion
+    
+    private void ToggleAllJuice(bool on)
+    {
+        _juiceToggle = S_JuiceManager.GetBoolList(on, _juiceToggle.Count);
+    }
+    private void ToggleJuice(List<bool> toggles)
+    {
+        _juiceToggle = toggles;
+    }
 }

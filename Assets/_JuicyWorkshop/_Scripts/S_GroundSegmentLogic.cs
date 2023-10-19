@@ -13,7 +13,7 @@ public class S_GroundSegmentLogic : MonoBehaviour
     
     
     private List<GameObject> _groundTiles = new List<GameObject>();
-    private List<GameObject> _spawnedObstacles = new List<GameObject>();
+    public List<GameObject> SpawnedObstacles {get; private set; } = new List<GameObject>();
 
     #region Unity Events
     void Start()
@@ -69,25 +69,25 @@ public class S_GroundSegmentLogic : MonoBehaviour
     {
         if (Random.Range(0f, 1f) < _obstacleProbability)
         {
-            _spawnedObstacles.Add(Instantiate(_obstaclePrefabs[Random.Range(0, _obstaclePrefabs.Count)]));
-            _spawnedObstacles[^1].transform.parent = parent;
-            _spawnedObstacles[^1].transform.localPosition = Vector3.zero;
+            SpawnedObstacles.Add(Instantiate(_obstaclePrefabs[Random.Range(0, _obstaclePrefabs.Count)]));
+            SpawnedObstacles[^1].transform.parent = parent;
+            SpawnedObstacles[^1].transform.localPosition = Vector3.zero;
         }
     }
 
     private void RemoveObstacleFromTile(GameObject obstacle)
     {
-        _spawnedObstacles.Remove(obstacle);
+        SpawnedObstacles.Remove(obstacle);
         Destroy(obstacle);
     }
 
     public void ClearObstacles()
     {
-        foreach (GameObject obstacle in _spawnedObstacles)
+        foreach (GameObject obstacle in SpawnedObstacles)
         {
             Destroy(obstacle);
         }
-        _spawnedObstacles = new List<GameObject>();
+        SpawnedObstacles = new List<GameObject>();
     }
 
     public void SetObstacleProbability(float newProbability)

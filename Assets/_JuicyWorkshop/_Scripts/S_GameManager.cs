@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -13,6 +14,7 @@ public class S_GameManager : MonoBehaviour
     private float _score;
 
     [SerializeField] private TMP_Text _scoreText;
+    [Tooltip("0: ScoreTextAnim")]
     [SerializeField] public List<bool> _juiceToggle;
     
     
@@ -37,6 +39,7 @@ public class S_GameManager : MonoBehaviour
         S_ObstacleLogic.PlayerHitObstacle += PlayerCollision;
         S_ObstacleLogic.ObstacleDestroyedByPlayer += GetScoreFromObstacle;
         S_JuiceManager.ToggleAllJuice += ToggleAllJuice;
+        S_JuiceManager.ToggleSpecificJuice += ToggleJuice;
     }
 
     private void OnDisable()
@@ -44,6 +47,7 @@ public class S_GameManager : MonoBehaviour
         S_ObstacleLogic.PlayerHitObstacle -= PlayerCollision;
         S_ObstacleLogic.ObstacleDestroyedByPlayer -= GetScoreFromObstacle;
         S_JuiceManager.ToggleAllJuice -= ToggleAllJuice;
+        S_JuiceManager.ToggleSpecificJuice -= ToggleJuice;
     }
 
     void Start()
@@ -116,8 +120,9 @@ public class S_GameManager : MonoBehaviour
     {
         _juiceToggle = S_JuiceManager.GetBoolList(on, _juiceToggle.Count);
     }
-    private void ToggleJuice(List<bool> toggles)
+    private void ToggleJuice(Component Script, List<bool> toggles)
     {
+        if (this != Script) return;
         _juiceToggle = toggles;
-    }
+    }    
 }

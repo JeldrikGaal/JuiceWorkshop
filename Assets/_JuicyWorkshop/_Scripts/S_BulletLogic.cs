@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -18,6 +19,9 @@ public class S_BulletLogic : MonoBehaviour
     
     [Tooltip("0: Camera shake")]
     [SerializeField] public List<bool> _juiceToggle;
+
+    public static event Action BulletImpact;
+    public static event Action BulletShot;
     
     #region Unity Events
     void Awake()
@@ -30,6 +34,7 @@ public class S_BulletLogic : MonoBehaviour
         Destroy(gameObject, _bulletLifetime);
         
         ToggleAllJuice(S_JuiceManager.Instance._allOn);
+        BulletShot?.Invoke();
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -43,7 +48,7 @@ public class S_BulletLogic : MonoBehaviour
                 // Camera shake
                 if (_juiceToggle[0])
                 {
-                    S_CameraShake.Instance.Shake(0.05f, 1.5f);
+                    BulletImpact?.Invoke();
                 }
                 
             }
@@ -55,11 +60,13 @@ public class S_BulletLogic : MonoBehaviour
     private void OnEnable()
     {
         S_JuiceManager.ToggleAllJuice += ToggleAllJuice;
+        S_JuiceManager.ToggleSpecificJuice += ToggleJuice;
     }
     
     private void OnDisable()
     {
         S_JuiceManager.ToggleAllJuice -= ToggleAllJuice;
+        S_JuiceManager.ToggleSpecificJuice -= ToggleJuice;
     }
     #endregion
     
@@ -73,9 +80,10 @@ public class S_BulletLogic : MonoBehaviour
         _juiceToggle = S_JuiceManager.GetBoolList(on, _juiceToggle.Count);
         _trailRenderer.enabled = on;
     }
-    private void ToggleJuice(List<bool> toggles)
+    private void ToggleJuice(Component Script, List<bool> toggles)
     {
+        if (this != Script) return;
         _juiceToggle = toggles;
-    }
+    }    
     
 }

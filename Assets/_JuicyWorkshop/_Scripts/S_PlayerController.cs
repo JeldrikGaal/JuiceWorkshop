@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using UnityEditor;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -17,7 +18,7 @@ public class S_PlayerController : MonoBehaviour
     [SerializeField] private Vector2 _movespeed;
     [SerializeField] private float _shootDelay;
     
-    [Tooltip("0: stretching on movement, 1: blink anim")]
+    [Tooltip("0: stretching on movement, 1: face,  2: blink anim")]
     [SerializeField] public List<bool> _juiceToggle;
 
     private float _lastShotTime;
@@ -84,7 +85,7 @@ public class S_PlayerController : MonoBehaviour
         }
         
         // Make Eyes blink
-        if (_juiceToggle[1])
+        if (_juiceToggle[2])
         {
             if (Time.time - _blinkAnimStart > _currentWaitTimeBlinkAnim)
             {
@@ -96,11 +97,13 @@ public class S_PlayerController : MonoBehaviour
     private void OnEnable()
     {
         S_JuiceManager.ToggleAllJuice += ToggleAllJuice;
+        S_JuiceManager.ToggleSpecificJuice -= ToggleJuice;
     }
     
     private void OnDisable()
     {
         S_JuiceManager.ToggleAllJuice -= ToggleAllJuice;
+        S_JuiceManager.ToggleSpecificJuice -= ToggleJuice;
     }
     #endregion
     
@@ -130,13 +133,21 @@ public class S_PlayerController : MonoBehaviour
     private void ToggleAllJuice(bool on)
     {
         _juiceToggle = S_JuiceManager.GetBoolList(on, _juiceToggle.Count);
-        _leftEye.SetActive(on);
-        _rightEye.SetActive(on);
-        _mouth.SetActive(on);
+        ToggleFace(on);
     }
-    private void ToggleJuice(List<bool> toggles)
+    
+    private void ToggleJuice(Component script, List<bool> toggles)
     {
+        if (this != script) return;
         _juiceToggle = toggles;
+        ToggleFace(toggles[1]);
+    }
+
+    private void ToggleFace(bool toggle)
+    {
+        _leftEye.SetActive(toggle);
+        _rightEye.SetActive(toggle);
+        _mouth.SetActive(toggle);
     }
 
     private IEnumerator BlinkAnim()

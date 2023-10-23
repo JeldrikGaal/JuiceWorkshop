@@ -51,6 +51,7 @@ public class S_BulletLogic : MonoBehaviour
         }
     }
     
+    
     private void OnEnable()
     {
         S_JuiceManager.ToggleAllJuice += ToggleAllJuice;

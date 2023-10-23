@@ -8,9 +8,12 @@ public class S_JuiceManager : MonoBehaviour
 {
     [SerializeField] private TMP_Text _toggleButtonText;
     public static event Action<bool> ToggleAllJuice;
+    public static event Action<bool> ToggleSpecificJuice;
     public static S_JuiceManager Instance;
     public bool _allOn = true;
 
+    // This makes this calls a 'singleon' pattern, meaning that there can only be one instance of this class in the scene.
+    // This is useful for classes that need to be accessed from anywhere in the scene, like a GameManager ( JuiceManager ).
     private void Awake()
     {
         if (Instance == null)
@@ -34,6 +37,11 @@ public class S_JuiceManager : MonoBehaviour
         _allOn = !_allOn;
         ToggleAllJuice?.Invoke(_allOn);
         _toggleButtonText.text = _allOn.ToString();
+    }
+
+    public void ToggleObject(MonoBehaviour scrip, List<bool> juiceToggle)
+    {
+        
     }
     
     private void SetAll(bool on)

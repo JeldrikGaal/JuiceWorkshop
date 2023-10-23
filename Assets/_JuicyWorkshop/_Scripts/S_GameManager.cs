@@ -15,6 +15,8 @@ public class S_GameManager : MonoBehaviour
     [SerializeField] private TMP_Text _scoreText;
     [SerializeField] public List<bool> _juiceToggle;
     
+    
+    
     #region Unity Events
 
     private void Awake()

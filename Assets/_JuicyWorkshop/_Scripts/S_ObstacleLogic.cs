@@ -38,6 +38,7 @@ public class S_ObstacleLogic : MonoBehaviour
     private void OnEnable()
     {
         S_JuiceManager.ToggleAllJuice += ToggleAllJuice;
+        S_JuiceManager.ToggleAllJuice += Togg;
     }
     
     private void OnDisable()

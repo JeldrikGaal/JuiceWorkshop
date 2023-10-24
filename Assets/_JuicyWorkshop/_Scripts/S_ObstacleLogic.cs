@@ -20,6 +20,12 @@ public class S_ObstacleLogic : MonoBehaviour
     [SerializeField] public List<bool> _juiceToggle;
     
     #region Unity Events
+
+    private void Awake()
+    {
+        _juiceToggle[0] = S_JuiceManager.Instance._obstacleJuice;
+    }
+
     void Start()
     {
         _startingHealth = _obstacleHealth;
@@ -52,7 +58,7 @@ public class S_ObstacleLogic : MonoBehaviour
     {
         _obstacleHealth -= damage;
        
-        if (_juiceToggle[0])
+        if (S_JuiceManager.Instance._obstacleJuice)
         {
             float percentage = _obstacleHealth / _startingHealth;
             transform.DOScale(new Vector3(percentage, percentage, percentage), 0.1f);
@@ -81,7 +87,7 @@ public class S_ObstacleLogic : MonoBehaviour
     private void ToggleJuice(Component Script, List<bool> toggles)
     {
         if (this != Script) return;
-        _juiceToggle = toggles;
+        _juiceToggle[0] = S_JuiceManager.Instance._obstacleJuice;
     }    
    
 }

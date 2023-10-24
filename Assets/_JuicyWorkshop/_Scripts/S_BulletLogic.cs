@@ -46,10 +46,7 @@ public class S_BulletLogic : MonoBehaviour
                 other.GetComponent<S_ObstacleLogic>().TakeDamage(_bulletDamage);
 
                 // Camera shake
-                if (_juiceToggle[0])
-                {
-                    BulletImpact?.Invoke();
-                }
+                BulletImpact?.Invoke();
                 
             }
             Die();

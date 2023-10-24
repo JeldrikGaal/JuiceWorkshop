@@ -29,12 +29,14 @@ public class S_CameraShake : MonoBehaviour
     {
         S_BulletLogic.BulletImpact += BulletImpactShake;
         S_BulletLogic.BulletShot += BulletShotShake;
+        S_JuiceManager.ToggleAllJuice += ToggleAllJuice;
     }
 
     private void OnDisable()
     {
         S_BulletLogic.BulletImpact -= BulletImpactShake;
         S_BulletLogic.BulletShot -= BulletShotShake;
+        S_JuiceManager.ToggleAllJuice -= ToggleAllJuice;
     }
     
     public void Shake(float duration, float intensity)
@@ -45,13 +47,13 @@ public class S_CameraShake : MonoBehaviour
 
     private void BulletImpactShake()
     {
-        if(_juiceToggle[0]) return;
+        if(!_juiceToggle[0]) return;
        Shake(0.05f, 1.5f);
     }
     
     private void BulletShotShake()
     {
-        if(_juiceToggle[1]) return;
+        if(!_juiceToggle[1]) return;
         Shake(0.025f, 0.5f);
     }
     

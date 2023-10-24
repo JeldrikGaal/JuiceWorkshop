@@ -15,17 +15,19 @@ public class S_PlayerController : MonoBehaviour
     [SerializeField] private GameObject _rightEyeBall;
     [SerializeField] private GameObject _mouth;
     [SerializeField] private GameObject _bulletPrefab;
+    [SerializeField] private GameObject _muzzleFlashPrefab;
+    [SerializeField] private GameObject _muzzleFlashSpawnPoint;
     [SerializeField] private Vector2 _movespeed;
     [SerializeField] private float _shootDelay;
     
-    [Tooltip("0: stretching on movement, 1: face,  2: blink anim")]
+    [Tooltip("0: stretching on movement, 1: face,  2: blink anim, 3: MuzzleFlash")]
     [SerializeField] public List<bool> _juiceToggle;
 
     private float _lastShotTime;
     public static S_PlayerController Instance;
 
     private float _blinkAnimStart;
-    private Vector2 _blinkAnimRandomRange = new Vector2(3,7);
+    private Vector2 _blinkAnimRandomRange = new Vector2(1,3);
     private float _currentWaitTimeBlinkAnim;
     
     #region Unity Events
@@ -97,7 +99,7 @@ public class S_PlayerController : MonoBehaviour
     private void OnEnable()
     {
         S_JuiceManager.ToggleAllJuice += ToggleAllJuice;
-        S_JuiceManager.ToggleSpecificJuice -= ToggleJuice;
+        S_JuiceManager.ToggleSpecificJuice += ToggleJuice;
     }
     
     private void OnDisable()
@@ -128,6 +130,15 @@ public class S_PlayerController : MonoBehaviour
         GameObject bullet = Instantiate(_bulletPrefab);
         bullet.transform.position = transform.position;
         _lastShotTime = Time.time;
+        MuzzleFlash();
+    }
+    
+    private void MuzzleFlash()
+    {
+        if (!_juiceToggle[3]) return;
+        GameObject muzzleFlash = Instantiate(_muzzleFlashPrefab);
+        muzzleFlash.transform.position = _muzzleFlashSpawnPoint.transform.position;
+        Destroy(muzzleFlash, 0.2f);
     }
     
     private void ToggleAllJuice(bool on)

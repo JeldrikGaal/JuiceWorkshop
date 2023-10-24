@@ -137,7 +137,7 @@ MeshRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1188314717
-  m_SortingLayer: 3
+  m_SortingLayer: 4
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!61 &7050300526635163936
@@ -198,5 +198,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _obstacleHealth: 8
-  _obstacleScore: 3
-  _juiceToggles: 01
+  _obstacleScore: 1
+  _juiceToggle: 01

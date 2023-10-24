@@ -6,6 +6,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Serialization;
 
+// This class is the ObstacleLogic. It manages the obstacle health and score.
 public class S_ObstacleLogic : MonoBehaviour
 {
     public static event Action<GameObject> PlayerHitObstacle;
@@ -29,10 +30,6 @@ public class S_ObstacleLogic : MonoBehaviour
     void Start()
     {
         _startingHealth = _obstacleHealth;
-    }
-    void Update()
-    {
-        
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -79,6 +76,7 @@ public class S_ObstacleLogic : MonoBehaviour
         return _obstacleScore;
     }
 
+    #region JuiceManagement
     private void ToggleAllJuice(bool on)
     {
         _juiceToggle = S_JuiceManager.GetBoolList(on, _juiceToggle.Count);
@@ -89,5 +87,5 @@ public class S_ObstacleLogic : MonoBehaviour
         if (this != Script) return;
         _juiceToggle[0] = S_JuiceManager.Instance._obstacleJuice;
     }    
-   
+   #endregion
 }

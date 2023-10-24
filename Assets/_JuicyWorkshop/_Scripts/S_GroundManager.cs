@@ -5,6 +5,7 @@ using Shapes;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
+// This Script manages the spawning, moving and removing of ground segments.
 public class S_GroundManager : MonoBehaviour
 {
     [SerializeField] public List<GameObject> _groundSegments;
@@ -53,6 +54,7 @@ public class S_GroundManager : MonoBehaviour
     }
     #endregion
     
+    #region Tile Management
     private void SpawnTile()
     {
         if (SpawnedSegments.Count > 0)
@@ -78,4 +80,5 @@ public class S_GroundManager : MonoBehaviour
         Destroy(SpawnedSegments[0]);
         SpawnedSegments.RemoveAt(0);
     }
+    #endregion
 }

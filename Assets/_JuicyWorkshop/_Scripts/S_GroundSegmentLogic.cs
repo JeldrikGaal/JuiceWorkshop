@@ -4,13 +4,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
+// This Script manages the singular ground tiles and spawns obstacles on them.
 public class S_GroundSegmentLogic : MonoBehaviour
 {
     [SerializeField] private List<GameObject> _groundPrefabs;
     [SerializeField] private float _tileAmount = 3f;
     [SerializeField] public float _obstacleProbability = 0.8f;
     [SerializeField] private List<GameObject> _obstaclePrefabs;
-    
     
     private List<GameObject> _groundTiles = new List<GameObject>();
     public List<GameObject> SpawnedObstacles {get; private set; } = new List<GameObject>();
@@ -40,7 +40,7 @@ public class S_GroundSegmentLogic : MonoBehaviour
 
     #endregion
     
-    
+    #region Tile & Obstacle Management
     private void SpawnGroundTiles(float amount)
     {
         int count = 0;
@@ -94,4 +94,5 @@ public class S_GroundSegmentLogic : MonoBehaviour
     {
         _obstacleProbability = newProbability;
     }
+    #endregion
 }

@@ -6,6 +6,8 @@ using UnityEditor;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
+
+// This Script is the PlayerController. It manages all player actions like movement and shooting.
 public class S_PlayerController : MonoBehaviour
 {
     [SerializeField] private GameObject _visuals;
@@ -68,6 +70,7 @@ public class S_PlayerController : MonoBehaviour
             Move(new Vector3(_movespeed.x * Time.deltaTime, 0, 0));
         }
 
+        // Let player move left and right with touch
         if (Input.touchCount > 0)
         {
             if(Camera.main.ScreenToWorldPoint(Input.touches[0].position).x > transform.position.x)
@@ -108,7 +111,9 @@ public class S_PlayerController : MonoBehaviour
         S_JuiceManager.ToggleSpecificJuice -= ToggleJuice;
     }
     #endregion
-    
+
+    #region PlayerActions
+    // Move the player away from his current position depending on the provided dif 
     private void Move(Vector3 dif)
     {
         Vector3 newPos = new Vector3(transform.position.x + dif.x, transform.position.y + dif.y, transform.position.z + dif.z);
@@ -125,6 +130,7 @@ public class S_PlayerController : MonoBehaviour
         }
     }
 
+    
     private void Shoot()
     {
         GameObject bullet = Instantiate(_bulletPrefab);
@@ -132,7 +138,10 @@ public class S_PlayerController : MonoBehaviour
         _lastShotTime = Time.time;
         MuzzleFlash();
     }
+    #endregion
     
+    #region VFX
+    // Spawns a Bullet and sets its position to the player position
     private void MuzzleFlash()
     {
         if (!_juiceToggle[3]) return;
@@ -140,7 +149,21 @@ public class S_PlayerController : MonoBehaviour
         muzzleFlash.transform.position = _muzzleFlashSpawnPoint.transform.position;
         Destroy(muzzleFlash, 0.2f);
     }
+    private IEnumerator BlinkAnim()
+    {
+        _currentWaitTimeBlinkAnim = Random.Range(_blinkAnimRandomRange.x, _blinkAnimRandomRange.y);
+        _blinkAnimStart = Time.time;
+        
+        _leftEye.SetActive(false);
+        _rightEye.SetActive(false);
+        yield return new WaitForSeconds(0.05f);
+        _leftEye.SetActive(true);
+        _rightEye.SetActive(true);
+        
+    }
+    #endregion
     
+    #region JuiceManagment
     private void ToggleAllJuice(bool on)
     {
         _juiceToggle = S_JuiceManager.GetBoolList(on, _juiceToggle.Count);
@@ -160,17 +183,6 @@ public class S_PlayerController : MonoBehaviour
         _rightEye.SetActive(toggle);
         _mouth.SetActive(toggle);
     }
-
-    private IEnumerator BlinkAnim()
-    {
-        _currentWaitTimeBlinkAnim = Random.Range(_blinkAnimRandomRange.x, _blinkAnimRandomRange.y);
-        _blinkAnimStart = Time.time;
-        
-        _leftEye.SetActive(false);
-        _rightEye.SetActive(false);
-        yield return new WaitForSeconds(0.05f);
-        _leftEye.SetActive(true);
-        _rightEye.SetActive(true);
-        
-    }
+    #endregion
+    
 }

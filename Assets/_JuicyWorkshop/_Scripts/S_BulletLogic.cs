@@ -5,6 +5,7 @@ using UnityEditor;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
+// This Script controls all Bullets making them fly and deal damage to obstacles
 public class S_BulletLogic : MonoBehaviour
 {
     [SerializeField] private float _bulletSpeed;
@@ -72,6 +73,7 @@ public class S_BulletLogic : MonoBehaviour
         Destroy(gameObject);
     }
 
+    #region JuiceManagement
     private void ToggleAllJuice(bool on)
     {
         _juiceToggle = S_JuiceManager.GetBoolList(on, _juiceToggle.Count);
@@ -82,5 +84,5 @@ public class S_BulletLogic : MonoBehaviour
         if (this != Script) return;
         _juiceToggle = toggles;
     }    
-    
+    #endregion
 }

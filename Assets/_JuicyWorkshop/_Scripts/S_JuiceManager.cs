@@ -5,6 +5,8 @@ using TMPro;
 using UnityEditor;
 using UnityEngine;
 
+// This class is only used to toggle juice on and off. 
+
 public class S_JuiceManager : MonoBehaviour
 {
     [SerializeField] private TMP_Text _toggleButtonText;

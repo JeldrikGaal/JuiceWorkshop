@@ -5,6 +5,8 @@ using DG.Tweening;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
+
+// This script holds functions for different camera shakes
 public class S_CameraShake : MonoBehaviour
 {
     public static S_CameraShake Instance;
@@ -12,6 +14,7 @@ public class S_CameraShake : MonoBehaviour
     [Tooltip("0: BulletImpact, 1: BulletShot")]
     [SerializeField] public List<bool> _juiceToggle;
 
+    #region Unity Events
     private void Awake()
     {
         if (Instance == null)
@@ -38,7 +41,9 @@ public class S_CameraShake : MonoBehaviour
         S_BulletLogic.BulletShot -= BulletShotShake;
         S_JuiceManager.ToggleAllJuice -= ToggleAllJuice;
     }
-    
+    #endregion
+   
+    #region Shakes
     public void Shake(float duration, float intensity)
     {
         Vector3 punch = new Vector3(Random.Range(-intensity, intensity), Random.Range(-intensity, intensity), 0);
@@ -56,7 +61,9 @@ public class S_CameraShake : MonoBehaviour
         if(!_juiceToggle[1]) return;
         Shake(0.025f, 0.5f);
     }
+    #endregion
     
+    #region JuiceManagement
     private void ToggleAllJuice(bool on)
     {
         _juiceToggle = S_JuiceManager.GetBoolList(on, _juiceToggle.Count);
@@ -66,4 +73,5 @@ public class S_CameraShake : MonoBehaviour
         if (this != Script) return;
         _juiceToggle = toggles;
     }    
+    #endregion
 }

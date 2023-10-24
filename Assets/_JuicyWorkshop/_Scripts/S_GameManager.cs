@@ -7,6 +7,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+// This class is the GameManager. It manages the gameflow and holds the score.
 public class S_GameManager : MonoBehaviour
 {
 
@@ -16,8 +17,6 @@ public class S_GameManager : MonoBehaviour
     [SerializeField] private TMP_Text _scoreText;
     [Tooltip("0: ScoreTextAnim")]
     [SerializeField] public List<bool> _juiceToggle;
-    
-    
     
     #region Unity Events
 
@@ -116,6 +115,7 @@ public class S_GameManager : MonoBehaviour
     }
     #endregion
     
+    #region JuiceManagement
     private void ToggleAllJuice(bool on)
     {
         _juiceToggle = S_JuiceManager.GetBoolList(on, _juiceToggle.Count);
@@ -125,4 +125,5 @@ public class S_GameManager : MonoBehaviour
         if (this != Script) return;
         _juiceToggle = toggles;
     }    
+    #endregion
 }
